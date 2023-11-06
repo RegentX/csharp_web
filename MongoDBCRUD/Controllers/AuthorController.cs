@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using MongoDBCRUD.Services;
 using MongoDBCRUD.Models;
 
@@ -72,17 +71,20 @@ public class AuthorController : ControllerBase
         return NoContent();
     }
     
-    // [HttpDelete("{authorId}")]
-    // public IActionResult DeleteAuthorWithCascade(string? authorId)
-    // {
-    //     if (string.IsNullOrWhiteSpace(authorId) || !ObjectId.TryParse(authorId, out ObjectId authorObjectId))
-    //     {
-    //         return BadRequest("Invalid authorId format");
-    //     }
-    //
-    //     _authorService.DeleteAuthorWithCascade(authorId);
-    //     return NoContent();
-    // }
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> DeleteAuthor(string name)
+    {
+        var result = await _authorService.DeleteAuthorCascadeAsync(name);
+
+        if (result)
+        {
+            return Ok();
+        }
+
+        return NotFound();
+    }
+
+
 
     
 }

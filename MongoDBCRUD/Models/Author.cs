@@ -12,5 +12,5 @@ public class AuthorCollection
 
     [BsonElement("author")]
     [JsonPropertyName("author")]
-    public string AuthorOfBook { get; set; } = null!;
+    public string AuthorOfBook { get; set; }
 }

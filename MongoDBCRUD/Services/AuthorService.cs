@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using MongoDBCRUD.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -22,6 +23,9 @@ public class AuthorService
         
         _authorCollection = mongoDatabase.GetCollection<AuthorCollection>(
             authorDatabaseSettings.Value.AuthorsCollectionName);
+        
+        _booksCollection = mongoDatabase.GetCollection<BooksCollection>(
+            authorDatabaseSettings.Value.BooksCollectionName);
 
     }
 
@@ -40,37 +44,24 @@ public class AuthorService
     public async Task RemoveAsync(string id) =>
         await _authorCollection.DeleteOneAsync(x => x.Id == id);
     
-    // public void DeleteAuthorWithCascade(string? authorId)
-    // {
-    //     // First, find the author
-    //     var author = _authorCollection.Find(author => author.Id == authorId).FirstOrDefault();
-    //
-    //     if (author != null)
-    //     {
-    //         // Delete the author
-    //         _authorCollection.DeleteOne(a => a.Id == authorId);
-    //
-    //         // Iterate through the books and remove the author's ObjectId
-    //         var filter = Builders<BooksCollection>.Filter.Eq("author", authorId);
-    //         var update = Builders<BooksCollection>.Update.Pull("author", authorId);
-    //         _booksCollection.UpdateMany(filter, update);
-    //     }
-    // }
+    public async Task<bool> DeleteAuthorCascadeAsync(string authorName)
+    {
+        var authorFilter = Builders<AuthorCollection>.Filter.Eq(a => a.AuthorOfBook, authorName);
+        var deleteResult = await _authorCollection.DeleteOneAsync(authorFilter);
+
+        if (deleteResult.DeletedCount > 0)
+        {
+            var bookFilter = Builders<BooksCollection>.Filter.AnyEq(b => b.Authors, authorName);
+            var update = Builders<BooksCollection>.Update.Pull(b => b.Authors, authorName);
+            var updateResult = await _booksCollection.UpdateManyAsync(bookFilter, update);
+
+            return updateResult.ModifiedCount > 0;
+        }
+
+        return false;
+    }
+
+
     
-    // public void DeleteAuthorWithCascade(string authorId)
-    // {
-    //     if (!ObjectId.TryParse(authorId, out ObjectId authorObjectId))
-    //     {
-    //         return; // Invalid authorId format, handle this as needed
-    //     }
-    //
-    //     // First, delete the author from AuthorsCollection
-    //     _authorCollection.DeleteOne(a => a.Id == authorObjectId);
-    //
-    //     // Then, remove the author's ObjectId from the books in BooksCollection
-    //     var filter = Builders<BooksCollection>.Filter.ElemMatch("author", authorObjectId);
-    //     var update = Builders<BooksCollection>.Update.Pull("author", authorObjectId);
-    //     _booksCollection.UpdateMany(filter, update);
-    // }
     
 }

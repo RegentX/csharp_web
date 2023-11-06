@@ -14,11 +14,10 @@ public class BooksCollection
     [BsonElement("name")]
     [JsonPropertyName("name")]
     public string BookName { get; set; } = null!;
-    
+
     [BsonElement("author")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [JsonPropertyName("authorId")]
-    public List<string?> Author { get; set; }
+    [JsonPropertyName("author")]
+    public List<string> Authors { get; set; } = new List<string>();
     
     [BsonElement("year")]
     [JsonPropertyName("year")]
