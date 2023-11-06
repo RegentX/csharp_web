@@ -72,7 +72,7 @@ public class AuthorController : ControllerBase
     }
     
     [HttpDelete("{name}")]
-    public async Task<IActionResult> DeleteAuthor(string name)
+    public async Task<IActionResult> CascadeDeleteAuthor(string name)
     {
         var result = await _authorService.DeleteAuthorCascadeAsync(name);
 
@@ -84,7 +84,12 @@ public class AuthorController : ControllerBase
         return NotFound();
     }
 
-
+    [HttpGet("authorCount")]
+    public async Task<IActionResult> GetAuthorCount()
+    {
+        var result = await _authorService.CountBooksPerAuthorAsync();
+        return Ok(result);
+    }
 
     
 }

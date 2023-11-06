@@ -18,25 +18,6 @@ public class BooksController : ControllerBase
     public async Task<List<BooksCollection>> Get() =>
         await _booksService.GetBooks();
     
-
-    [HttpGet("books/{bookName}/{bookName2}/{bookName3}/{bookName4}")]
-    public async Task<IActionResult> GetTotalStudentsForBooks(string bookName, string bookName2, string bookName3, string bookName4)
-    {
-        try
-        {
-            var studentCounts = await _booksService.GetTotalStudentsWithBooks(bookName, bookName2, bookName3, bookName4);
-
-            return Ok(studentCounts);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { Message = ex.Message });
-        }
-    }
-
-
-
-
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<BooksCollection>> GetBook(string id)
     {
@@ -58,13 +39,6 @@ public class BooksController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
     }
     
-    // [HttpPost]
-    // public async Task<IActionResult> Post(AuthorCollection newAuthor)
-    // {
-    //     await _booksService.CreateAsync(newAuthor);
-    //
-    //     return CreatedAtAction(nameof(Get), new { id = newAuthor.Id }, newAuthor);
-    // }
 
     [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> UpdateBook(string id, BooksCollection updatedBook)
@@ -98,22 +72,4 @@ public class BooksController : ControllerBase
         return NoContent();
     }
     
-    // [HttpDelete("CascadeDelete/{authorName}")]
-    // public async Task<IActionResult> DeleteAuthorAndRelated(string authorName)
-    // {
-    //     if (string.IsNullOrWhiteSpace(authorName))
-    //     {
-    //         return BadRequest("Where is my author?.");
-    //     }
-    //
-    //     try
-    //     {
-    //         await _booksService.CascadeDelete(authorName);
-    //         return Ok($"Author '{authorName}' and other's documents was delete! Congratulations! It works!.");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         return StatusCode(500, $"Error: {ex.Message}");
-    //     }
-    // }
 }

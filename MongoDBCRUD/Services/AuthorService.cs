@@ -61,7 +61,28 @@ public class AuthorService
         return false;
     }
 
+    public async Task<Dictionary<string, int>> CountBooksPerAuthorAsync()
+    {
+        var books = await _booksCollection.Find(new BsonDocument()).ToListAsync();
+        var authorCounts = new Dictionary<string, int>();
 
+        foreach (var book in books)
+        {
+            foreach (var author in book.Authors)
+            {
+                if (authorCounts.ContainsKey(author))
+                {
+                    authorCounts[author]++;
+                }
+                else
+                {
+                    authorCounts[author] = 1;
+                }
+            }
+        }
+
+        return authorCounts;
+    }
     
     
 }
