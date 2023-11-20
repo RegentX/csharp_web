@@ -6,15 +6,15 @@ using MongoDBCRUD.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.Configure<BooksDatabaseSettings>(
-    builder.Configuration.GetSection("BooksDatabase"));
+builder.Services.Configure<TrainerDatabaseSettings>(
+    builder.Configuration.GetSection("TrainersDatabase"));
 
-builder.Services.Configure<AuthorDatabaseSettings>(
-    builder.Configuration.GetSection("AuthorDatabase"));
+builder.Services.Configure<DesignerDatabaseSettings>(
+    builder.Configuration.GetSection("DesignerDatabase"));
 
 
-builder.Services.AddSingleton<BooksService>();
-builder.Services.AddSingleton<AuthorService>();
+builder.Services.AddSingleton<TrainersService>();
+builder.Services.AddSingleton<DesignerService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(

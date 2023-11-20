@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="BooksApi.csproj" />
+      <Content Include="TrainersApi.csproj" />
     </ItemGroup>
 
 </Project>
